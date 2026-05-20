@@ -27,7 +27,9 @@ func New(handler *api.Handler, port int, frontendDir string) *Server {
 
 	r.Mount("/api", handler.Routes())
 
-	r.Get("/*", serveFrontend(frontendDir))
+	frontend := serveFrontend(frontendDir)
+	r.Get("/", frontend)
+	r.NotFound(frontend)
 
 	return &Server{
 		httpServer: &http.Server{
